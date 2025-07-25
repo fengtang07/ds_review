@@ -1,10 +1,10 @@
 # Arrays, Stacks, and Queues
 
-### What is an Array?
+# What is an Array?
 
 An **array** is a fundamental data structure that stores elements of the same type in a **contiguous block of memory**. This sequential storage is what makes arrays highly efficient for many data science tasks, as it's cache-friendly and allows for direct memory access. In Python, the `list` type is a dynamic array, meaning it can automatically resize itself.
 
-### Key Properties
+# Key Properties
 
 - **Fixed size** (in most languages)
 - **Zero-indexed** (first element at index 0)
@@ -12,7 +12,7 @@ An **array** is a fundamental data structure that stores elements of the same ty
 - **Random access** in O(1) time
 - **Cache-friendly** due to spatial locality
 
-### Key Properties & Complexities
+# Key Properties & Complexities
 
 | Operation | Average Case | Worst Case | Space Complexity | Data Science Context & Notes |
 | --- | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ An **array** is a fundamental data structure that stores elements of the same ty
 | **Insertion** | O(n) | O(n) | O(n) | Requires shifting elements, costly for large arrays. |
 | **Deletion** | O(n) | O(n) | O(n) | Also requires shifting, a performance bottleneck. |
 
-### Memory Layout
+# Memory Layout
 
 ```
 Array: [10, 20, 30, 40, 50]
@@ -35,9 +35,9 @@ Element at index i = base_address + (i * element_size)
 
 ---
 
-## Essential Patterns & Techniques
+# Essential Patterns & Techniques
 
-### 1. Two Pointers
+## 1. Two Pointers
 
 This is a highly common pattern in array-based interview questions, especially when the array is sorted. By using two pointers, you can often avoid nested loops and reduce time complexity from O(n2) to O(n).
 
@@ -46,16 +46,27 @@ This is a highly common pattern in array-based interview questions, especially w
 - **Same-Direction Pointers (Slow & Fast)**: Both pointers start at the beginning. The fast pointer iterates through the array, while the slow pointer only moves when a certain condition is met.
     - **Use Case**: Removing duplicates in-place from a sorted array. The slow pointer marks the end of the unique-element section.
 
-### Example 1: Opposite Direction Pointers
+### Example 1: Two Sum II - Input Array Is Sorted
 
-**Problem**: Find two numbers in a **sorted array** that add up to a target value.
+**LEETCODE LINK** [https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
 
-**Strategy**: Use two pointers starting from opposite ends of the array:
+**Solution Strategy**
 
-- **Left pointer**: Starts at smallest value (index 0)
-- **Right pointer**: Starts at largest value (index len-1)
-- **Move pointers inward** based on whether sum is too small or too large
-- **Leverage sorted property** to eliminate impossible solutions efficiently
+1. Initialize two pointers at opposite ends of the sorted array:
+    - `left`: Points to the smallest element (index 0)
+    - `right`: Points to the largest element (last index)
+2. Use a while loop to move pointers toward each other until they meet
+3. At each step, calculate the sum of elements at current pointer positions
+4. Compare the current sum with target:
+    - If `current_sum == target`: Found the answer, return 1-indexed positions
+    - If `current_sum < target`: Sum too small, move `left` pointer right to get larger numbers
+    - If `current_sum > target`: Sum too large, move `right` pointer left to get smaller numbers
+5. Continue until pointers meet or solution is found
+
+**Time/Space Complexity**
+
+- Time: O(n) - each element is visited at most once as pointers move toward center
+- Space: O(1) - only using two pointer variables, no additional data structures
 
 ```python
 class Solution:
@@ -125,11 +136,11 @@ class Solution:
 
 ```
 
-**LEETCODE LINK** [https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
-
 ### Example 2: Same Direction Pointers (Slow/Fast)
 
-Solution Strategy
+LEETCODE LINK [https://leetcode.com/problems/remove-duplicates-from-sorted-array/](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+
+**Solution Strategy**
 
 1. Keep the first element (it's always unique)
 2. Use two pointers:
@@ -138,7 +149,7 @@ Solution Strategy
 3. Compare current element with the last confirmed unique element
 4. Only update when we find a new unique element
 
-Time/Space Complexity
+**Time/Space Complexity**
 
 - Time: O(n) - single pass through array
 - Space: O(1) - in-place modification
@@ -202,27 +213,27 @@ class Solution:
 
 ```
 
-LEETCODE LINK [https://leetcode.com/problems/remove-duplicates-from-sorted-array/](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+### Example 3: Shuffle the Array
 
-### Example 3: Shuffle items
+LEETCODE LINK [https://leetcode.com/problems/shuffle-the-array/](https://leetcode.com/problems/shuffle-the-array/)
 
 **Solution Strategy**
 
-1. **Identify the two halves** in the input array
+1. Identify the two halves in the input array
     - First half: indices `0` to `n-1` (elements x₁, x₂, ..., xₙ)
     - Second half: indices `n` to `2n-1` (elements y₁, y₂, ..., yₙ)
-2. **Use single loop through first half only**
+2. Use single loop through first half only
     - `i`: Iterates from `0` to `n-1`
     - For each `i`, access both `nums[i]` and `nums[i + n]`
-3. **Alternate pattern for each iteration**
+3. Alternate pattern for each iteration
     - Take element from first half: `nums[i]`
     - Take corresponding element from second half: `nums[i + n]`
     - Add both to result in sequence
-4. **Key insight: Index mapping**
+4. Key insight: Index mapping
     - Position `i` in first half maps to position `i + n` in second half
     - This creates the interleaved pattern: `[x₁, y₁, x₂, y₂, ..., xₙ, yₙ]`
 
-## **Time/Space Complexity**
+**Time/Space Complexity**
 
 - **Time**: O(n) - single pass through array, each element accessed exactly once
 - **Space**: O(n) - create new result array of size 2n to store shuffled elements
@@ -268,15 +279,32 @@ class Solution:
 
 ```
 
-LEETCODE LINK [https://leetcode.com/problems/shuffle-the-array/](https://leetcode.com/problems/shuffle-the-array/)
-
-### 2. In-place Manipulation
+## 2. In-place Manipulation
 
 Interviewers often look for solutions that modify the array directly without using extra memory. This tests your understanding of memory management and pointer manipulation.
 
 **Use Case**: Moving all negative elements to one side of an array. A common strategy involves using the array itself to store intermediate results, reducing space complexity from
 
 O(n) to O(1).
+
+### Example 1: Move Zeros
+
+LEEDCODE  [https://leetcode.com/problems/move-zeroes/description/](https://leetcode.com/problems/move-zeroes/description/)
+
+**Solution Strategy**
+
+1. Initialize a `write_index` pointer to track where the next non-zero element should be placed
+2. **First pass**: Iterate through the entire array:
+    - When encountering a non-zero element, place it at `write_index` position
+    - Increment `write_index` to point to the next available position
+    - Skip zero elements (don't move `write_index`)
+3. **Second pass**: Fill all remaining positions from `write_index` to end of array with zeros
+4. This approach maintains the relative order of non-zero elements while moving all zeros to the end
+
+**Time/Space Complexity**
+
+- Time: O(n) - two passes through the array, each element processed at most twice
+- Space: O(1) - in-place modification using only one additional pointer variable
 
 ```python
 class Solution:
@@ -298,15 +326,30 @@ class Solution:
             write_index += 1
 ```
 
-LEEDCODE 
-
-[Move Zeroes - LeetCode](https://leetcode.com/problems/move-zeroes/)
-
-### 3. Sliding Window
+## 3. Sliding Window
 
 This pattern involves maintaining a "window" (a sub-array) of a certain size that moves through the main array. It's excellent for problems involving contiguous sub-arrays.
 
 **Use Case**: Finding the contiguous subarray with the largest sum.  As you slide the window, you update the current sum. If the sum becomes negative, you reset the window's start because a negative prefix won't contribute to a larger maximum sum.
+
+### Example 1: Maximum Average Subarray I
+
+LEETCODE : [https://leetcode.com/problems/maximum-average-subarray-i/description/](https://leetcode.com/problems/maximum-average-subarray-i/description/)
+
+**Solution Strategy**
+
+1. Calculate the initial sum of the first `k` elements to establish the first window
+2. Set `max_sum` to this initial window sum as our baseline
+3. **Slide the window**: Starting from index `k`, iterate through the rest of the array:
+    - Add the new element entering the window on the right (`nums[i]`)
+    - Remove the element leaving the window on the left (`nums[i-k]`)
+    - Update `max_sum` if current window sum is larger
+4. Return the maximum sum divided by `k` to get the maximum average
+
+**Time/Space Complexity**
+
+- Time: O(n) - O(k) for initial sum + O(n-k) for sliding window = O(n) total
+- Space: O(1) - only using a few variables regardless of input size
 
 ```python
 class Solution:
@@ -324,13 +367,26 @@ class Solution:
         return max_sum / k
 ```
 
-[Maximum Average Subarray I - LeetCode](https://leetcode.com/problems/maximum-average-subarray-i/description/)
+# Stack Overview
 
-### What is a Stack?
+## What is a Stack?
 
 A **stack** is a linear data structure adhering to the **LIFO (Last-In, First-Out)** principle. It's restricted to adding (pushing) and removing (popping) elements from the same end, known as the "top."
 
-### Core Operations
+```python
+Initial Stack:        After push(40):       After pop():
+┌─────────┐          ┌─────────┐           ┌─────────┐
+│   30    │ ← TOP    │   40    │ ← TOP     │   30    │ ← TOP
+├─────────┤          ├─────────┤           ├─────────┤
+│   20    │          │   30    │           │   20    │
+├─────────┤          ├─────────┤           ├─────────┤
+│   10    │          │   20    │           │   10    │
+└─────────┘          ├─────────┤           └─────────┘
+                     │   10    │
+                     └─────────┘
+```
+
+## Core Operations
 
 - **Push**: Add element to the top
 - **Pop**: Remove element from the top
@@ -338,13 +394,13 @@ A **stack** is a linear data structure adhering to the **LIFO (Last-In, First-Ou
 - **isEmpty**: Check if stack is empty
 - **Size**: Get number of elements
 
-### Key Properties
+## Key Properties
 
 - **LIFO**: Last element added is first to be removed
 - **Restricted access**: Can only access the top element
 - **Dynamic size**: Can grow and shrink during runtime
 
-### Stack Applications in Data Science & Interviews
+## Stack Applications in Data Science & Interviews
 
 Stacks are fundamental for handling nested or recursive structures.
 
@@ -353,7 +409,7 @@ Stacks are fundamental for handling nested or recursive structures.
 2. **Managing Recursion**: Under the hood, programming languages use a "call stack" to manage function calls. Recursive algorithms can often be implemented iteratively using a stack, which can help prevent stack overflow errors for deep recursions.
     - **Example**: Depth-First Search (DFS) on a tree or graph can be implemented recursively or iteratively with a stack.
 
-### Stack Cheat Sheet
+## Stack Cheat Sheet
 
 ```python
 # Creation
@@ -374,10 +430,26 @@ class Stack:
 
     def pop(self):
         return self.stack.pop()
-
 ```
 
-### Example 1: Stack operation
+### Example 1: Baseball Game Operation
+
+LEETCODE LINK  [https://leetcode.com/problems/baseball-game/description/](https://leetcode.com/problems/baseball-game/description/)
+
+**Solution Strategy**
+
+1. Initialize an empty `record` list to act as a stack for storing valid scores
+2. Iterate through each operation in the input:
+    - If operation is `'+'`: Add the sum of the last two scores to the record
+    - If operation is `'D'`: Add double the last score to the record
+    - If operation is `'C'`: Remove (cancel) the most recent score from the record
+    - Otherwise: The operation is a number, convert to integer and add to record
+3. Return the sum of all remaining scores in the record
+
+**Time/Space Complexity**
+
+- Time: O(n) - single pass through operations, each operation processed in O(1) time
+- Space: O(n) - record list can store up to n scores in worst case (when no cancellations occur)
 
 ```python
 class Solution:
@@ -395,12 +467,28 @@ class Solution:
         return sum(record)
 ```
 
-LEETCODE LINK  [https://leetcode.com/problems/baseball-game/description/](https://leetcode.com/problems/baseball-game/description/)
+### Example 2: Valid Parentheses
 
-stack characters 
+Leetcode [https://leetcode.com/problems/valid-parentheses/description/](https://leetcode.com/problems/valid-parentheses/description/)
+
+**Solution Strategy**
+
+1. Initialize an empty `stack` to track opening brackets and create a `mapping` dictionary to match closing brackets with their corresponding opening brackets
+2. Iterate through each character in the input string:
+    - If character is a **closing bracket** (`')'`, `'}'`, `']'`):
+        - Check if stack is empty or if the top element doesn't match the expected opening bracket
+        - If either condition is true, return `False` (invalid)
+        - Otherwise, the `pop()` operation removes the matched opening bracket
+    - If character is an **opening bracket**: Push it onto the stack
+3. After processing all characters, return `True` only if stack is empty (all brackets were properly matched)
+
+**Time/Space Complexity**
+
+- Time: O(n) - single pass through the string, each character processed in O(1) time
+- Space: O(n) - stack can store up to n/2 opening brackets in worst case scenario
 
 ```python
-def isValid(s: str) -> bool:
+def isValid(self,s: str) -> bool:
     """
     Stack-based solution for Valid Parentheses
     Time: O(n), Space: O(n)
@@ -425,7 +513,29 @@ def isValid(s: str) -> bool:
     return len(stack) == 0
 ```
 
-### Example 2: keep the mininmal stack
+### Example 3: **Min Stack**
+
+LEETCODE [https://leetcode.com/problems/min-stack/](https://leetcode.com/problems/min-stack/)
+
+**Solution Strategy**
+
+1. **Initialize two parallel stacks**:
+    - `stack`: Stores all actual values
+    - `min_stack`: Stores the minimum value available at each level
+2. **Push operation**:
+    - Always add the new value to the main stack
+    - For min_stack: if new value is ≤ current minimum (or min_stack is empty), add the new value; otherwise, duplicate the current minimum
+    - This ensures min_stack[top] always contains the current overall minimum
+3. **Pop operation**:
+    - Remove from both stacks simultaneously
+    - After removal, min_stack automatically reflects the minimum of remaining elements
+4. **Top operation**: Return the top element from main stack
+5. **GetMin operation**: Return the top element from min_stack (current minimum in O(1) time)
+
+**Time/Space Complexity**
+
+- Time: O(1) - all operations (push, pop, top, getMin) perform constant-time stack operations
+- Space: O(n) - two stacks each storing up to n elements, so 2n total space
 
 ```python
 class MinStack:
@@ -479,24 +589,24 @@ class MinStack:
         # all elements currently in the main stack
 ```
 
-LEETCODE [https://leetcode.com/problems/min-stack/](https://leetcode.com/problems/min-stack/)
+## Queue Overview
 
-## 🚶 Queue Overview
-
-### What is a Queue?
+## What is a Queue?
 
 A **queue** is a linear data structure that follows the **FIFO (First-In, First-Out)** principle. Elements are added (enqueued) to the rear and removed (dequeued) from the front.
 
-### Visual Representation
+```python
+FRONT                                    REAR
+  ↓                                        ↓
+┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+│  10 │  20 │  30 │  40 │  50 │  60 │  70 │  80 │
+└─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+  ↑                                        ↑
+Remove from here              Add new elements here
+(dequeue)                         (enqueue)
+```
 
-`ENQUEUE →  ┌───┬───┬───┬───┐  → DEQUEUE
-(add)      │ D │ C │ B │ A │     (remove)
-           └───┴───┴───┴───┘
-           ↑               ↑
-         REAR            FRONT
-        (newest)        (oldest)`
-
-### Core Operations
+## Core Operations
 
 - **Enqueue**: Add element to the rear
 - **Dequeue**: Remove element from the front
@@ -505,13 +615,13 @@ A **queue** is a linear data structure that follows the **FIFO (First-In, First-
 - **isEmpty**: Check if queue is empty
 - **Size**: Get number of elements
 
-### Key Properties
+## Key Properties
 
 - **FIFO**: First element added is first to be removed
 - **Two-ended access**: Add at rear, remove from front
 - **Dynamic size**: Can grow and shrink during runtime
 
-### Queue Applications in Data Science & Interviews
+## Queue Applications in Data Science & Interviews
 
 Queues are ideal for processing items in the order they were received.
 
@@ -538,7 +648,29 @@ empty = len(queue) == 0  # Check empty
 
 ---
 
-### Example 1
+### Example 1 Implement Queue using Stacks
+
+LEETCODE [https://leetcode.com/problems/implement-queue-using-stacks/description/](https://leetcode.com/problems/implement-queue-using-stacks/description/)
+
+**Solution Strategy**
+
+1. **Initialize two stacks**:
+    - `in_stack`: Handles all incoming elements (push operations)
+    - `out_stack`: Handles all outgoing elements (pop/peek operations)
+2. **Push operation**: Always add new elements to `in_stack` (maintains insertion order)
+3. **Pop/Peek operations**:
+    - Call helper method `move_in_to_out()` to ensure `out_stack` has the front element
+    - Pop or peek from `out_stack` (which now has the oldest element on top)
+4. **Transfer logic** (`move_in_to_out`):
+    - Only transfer when `out_stack` is empty (avoids disrupting order)
+    - Move all elements from `in_stack` to `out_stack`, which reverses their order
+    - Now oldest element (queue front) is on top of `out_stack`
+5. **Empty check**: Queue is empty only when both stacks are empty
+
+**Time/Space Complexity**
+
+- Time: O(1) amortized for all operations - each element is moved at most once between stacks
+- Space: O(n) - two stacks storing up to n total elements
 
 ```python
 class MyQueue:
@@ -579,14 +711,10 @@ class MyQueue:
         if not self.out_stack:
             while self.in_stack:
                 # Pop from in_stack and push onto out_stack
-                self.out_stack.append(self.in_stack.pop())
+                self.out_stack.append(self.in_stack.pop()
 ```
 
-LEETCODE [https://leetcode.com/problems/implement-queue-using-stacks/description/](https://leetcode.com/problems/implement-queue-using-stacks/description/)
-
----
-
-## ⚖️ Key Differences
+## Key Differences between Stack and Queue
 
 | Aspect | Stack | Queue |
 | --- | --- | --- |
@@ -598,3 +726,67 @@ LEETCODE [https://leetcode.com/problems/implement-queue-using-stacks/description
 | **Use Cases** | Function calls, undo operations | Task scheduling, printing |
 
 ---
+
+# Practice questions
+
+## **1. Arrays (In-place Manipulation & Two Pointers)**
+
+*(Different from Move Zeroes / Remove Duplicates)*
+
+- [Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/)
+    
+    *In-place merge of two sorted arrays.*
+    
+- [Sort Array By Parity](https://leetcode.com/problems/sort-array-by-parity/)
+    
+    *Reorder array to put even numbers first using two pointers.*
+    
+- [Height Checker](https://leetcode.com/problems/height-checker/)
+    
+    *Count how many are out of order compared to sorted array.*
+    
+- [Relative Sort Array](https://leetcode.com/problems/relative-sort-array/)
+    
+    *Sort one array based on order of another.*
+    
+
+---
+
+## **2. Sliding Window (Different Average/Window Problems)**
+
+- [Maximum Sum of Distinct Subarrays With Length K](https://leetcode.com/problems/maximum-sum-of-distinct-subarrays-with-length-k/)
+    
+    *Sliding window + set for distinct sum.*
+    
+- [Longest Subarray of 1’s After Deleting One Element](https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/)
+    
+    *Window expansion and shrinkage logic.*
+    
+- [Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
+    
+    *Find smallest subarray with sum ≥ target.*
+    
+- [Grumpy Bookstore Owner](https://leetcode.com/problems/grumpy-bookstore-owner/)
+    
+    *Window sum optimization for customer satisfaction.*
+    
+
+---
+
+## **3. Stacks (Different Stack Use Cases)**
+
+- [Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)
+    
+    *Stack to find next greater numbers.*
+    
+- [Crawler Log Folder](https://leetcode.com/problems/crawler-log-folder/)
+    
+    *Stack simulation for folder navigation.*
+    
+- [Remove Outermost Parentheses](https://leetcode.com/problems/remove-outermost-parentheses/)
+    
+    *Track depth of parentheses with stack.*
+    
+- [Make The String Great](https://leetcode.com/problems/make-the-string-great/)
+    
+    *Use stack to remove adjacent opposite-case letters.*
